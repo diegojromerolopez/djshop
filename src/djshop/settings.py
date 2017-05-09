@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'djshop.apps.sale',
     'djshop.apps.store',
     'djshop.apps.public',
+    'djangovirtualpos',
     'sorl.thumbnail',
 ]
 

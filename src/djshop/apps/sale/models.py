@@ -23,6 +23,8 @@ class Sale(models.Model):
     code = models.CharField(verbose_name=u"Sale unique code", max_length=16)
     creation_datetime = models.DateTimeField(verbose_name=u"Creation datetime")
 
+    operation_number = models.CharField(verbose_name=u"Sale operation number", max_length=128)
+
     online_payment_code = models.CharField(verbose_name=u"Online payment code", max_length=64, default=None, null=True)
     payment_datetime = models.DateTimeField(verbose_name=u"Online payment datetime", default=None, null=True)
 

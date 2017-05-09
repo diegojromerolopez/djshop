@@ -1,0 +1,38 @@
+{% if sale.status == "paid" %}
+    <h2>Sale completed successfully</h2>
+{% elif sale.status == "pending" %}
+    <h2>Sale not yet completed </h2>
+{% elif sale.status == "canceled" %}
+    <h2>Sale canceled by user</h2>
+{% endif %}
+<table class="table">
+    <tr>
+        <td>Product</td>
+        <td>Price</td>
+        <td>Amount</td>
+        <td>Total price</td>
+    </tr>
+    {% for sale_detail in sale.sale_details.all %}
+        <tr>
+            <td>{{sale_detail.product_name}}</td>
+            <td>{{sale_detail.product_price}} €</td>
+            <td>{{sale_detail.amount}} {% if sale_detail.product_price_type == "price_per_unit" %}units{% else %}grams{% endif %}</td>
+            <td>
+                {% if sale_detail.bundle_offer_name %}
+                    <strike>{{sale_detail.total_price}} €</strike>
+                    {{sale_detail.bundle_offer_name}}
+                {% endif %}
+                {{sale_detail.final_price}} €
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+<div>
+    <h2>Total</h2>
+    {% if sale.group_offer_name %}
+        <strike>{{sale.total_price}} €</strike>
+        {{sale.group_offer_name}}
+    {% endif %}
+    {{sale.final_price}} €
+</div>

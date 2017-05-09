@@ -2,6 +2,21 @@
 {% load staticfiles %}
 {% load thumbnail %}
 
+{% block js %}
+	{{block.super}}
+	<!-- Definimos constantes necesarias para que funcione el TPV -->
+	<script type="text/javascript">
+		var vpos_constants = vpos_constants || new ConstantStorage;
+		vpos_constants.set("SET_PAYMENT_ATTRIBUTES_URL", "{% url 'public:set_payment_attributes' %}");
+		vpos_constants.set("PAYMENT_CODE", "{{sale.code}}");
+		vpos_constants.set("URL_OK", "{{url_ok}}");
+		vpos_constants.set("URL_NOK", "{{url_nok}}");
+	</script>
+
+	<script src="{% static 'js/djangovirtualpos/payment/set_payment_attributes.js' %}"></script>
+{% endblock %}
+
+
 {% block page_title %}
     View your shoppint cart
 {% endblock %}
@@ -59,5 +74,16 @@
         {{sale.final_price}} €
     </div>
 
-    <button>PAY</button>
+    {% if virtual_point_of_sales|length > 0 %}
+        <div>
+            {% for virtual_point_of_sale in virtual_point_of_sales %}
+                <button class="pay_button">{{virtual_point_of_sale.name}}</button>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div>
+            No Virtual POS configured.
+        </div>
+    {% endif %}
+
 {% endblock %}

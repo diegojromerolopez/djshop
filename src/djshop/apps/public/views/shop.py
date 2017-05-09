@@ -6,6 +6,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from djangovirtualpos.models import VirtualPointOfSale
 
 from djshop.apps.offers.models import BundleOffer, GroupOffer
 from djshop.apps.public.forms import ShoppingCartCheckoutForm
@@ -122,7 +123,13 @@ def remove_from_cart(request):
 
 def shopping_cart_checkout(request, sale_code):
     sale = Sale.objects.get(code=sale_code)
-    replacements = {"sale": sale}
+    virtual_point_of_sales = VirtualPointOfSale.objects.all()
+    replacements = {
+        "sale": sale,
+        "virtual_point_of_sales": virtual_point_of_sales,
+        "url_ok": request.build_absolute_uri(reverse("public:sale_ok", kwargs={"sale_code": sale.code})),
+        "url_nok": request.build_absolute_uri(reverse("public:sale_cancel", kwargs={"sale_code": sale.code})),
+    }
     return render(request, "public/shop/shopping_cart_checkout.html", replacements)
 
 

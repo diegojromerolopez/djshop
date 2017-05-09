@@ -75,11 +75,9 @@ class SelectedProduct(object):
     # Add bundle offer to this selected product
     def add_bundle_offer(self, bundle_offer):
         discounted_price = bundle_offer.get_discounted_price(self)
-        print discounted_price
         if discounted_price is not None:
             self.bundle_offer = bundle_offer
             self.final_price = discounted_price
-            print "Applying offer to selected-product"
 
     # Convert this selected product to JSON
     def to_json(self):
