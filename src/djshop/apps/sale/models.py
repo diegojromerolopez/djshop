@@ -34,11 +34,13 @@ class Sale(models.Model):
 
     group_offer_name = models.CharField(max_length=128, verbose_name=u"Name of the offer", default="", blank=True)
 
-    group_offer_discount_amount = models.DecimalField(verbose_name=u"Discount amount", decimal_places=2, max_digits=10)
+    group_offer_discount_amount = models.DecimalField(
+        verbose_name=u"Discount amount", decimal_places=2, max_digits=10, default=0
+    )
 
     group_offer_discount_type = models.CharField(
         verbose_name=u"Discount type (percent or absolute)",
-        max_length=32, choices=GroupOffer.DISCOUNT_TYPE
+        max_length=32, choices=GroupOffer.DISCOUNT_TYPE, null=True, blank=True, default=None
     )
 
     final_price = models.DecimalField(verbose_name=u"Final price for this sale",
@@ -74,6 +76,16 @@ class Sale(models.Model):
             SaleDetail.create_from_selected_product(selected_product, sale)
 
         return sale
+
+    # Description used in VPOS
+    @property
+    def description(self):
+        return u"Sale {0} made by {1} {2}".format(self.code, self.first_name, self.last_name)
+
+    # Online confirm
+    def online_confirm(self):
+        self.status = "paid"
+        self.save()
 
 
 # Sale detail
