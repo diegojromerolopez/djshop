@@ -28,13 +28,13 @@ def confirm_sale(request, virtualpos_type):
 
 # Sale completed successfully
 def sale_ok(request, sale_code):
-    sale = Sale.objects.get(code=sale_code)
+    sale = Sale.objects.get(code=sale_code, status="paid")
     replacements = {"sale": sale}
     return render(request, "public/sale/ok.html", replacements)
 
 
 # Cancel sale
 def sale_cancel(request, sale_code):
-    sale = Sale.objects.get(code=sale_code)
+    sale = Sale.objects.get(code=sale_code, status="canceled")
     replacements = {"sale": sale}
     return render(request, "public/sale/cancel.html", replacements)
