@@ -1,19 +1,12 @@
 {% extends "base/base.html" %}
 {% load staticfiles %}
+{% load djangovirtualpos_js %}
 {% load thumbnail %}
 
 {% block js %}
 	{{block.super}}
-	<!-- VPOS constants -->
-	<script type="text/javascript">
-		var vpos_constants = {};
-		vpos_constants["SET_PAYMENT_ATTRIBUTES_URL"] = "{% url 'public:set_payment_attributes' %}";
-		vpos_constants["PAYMENT_CODE"] = "{{sale.code}}";
-		vpos_constants["URL_OK"] = "{{url_ok}}";
-		vpos_constants["URL_NOK"] = "{{url_nok}}";
-	</script>
-
-	<script src="{% static 'js/store/payment/set_payment_attributes.js' %}"></script>
+    {% url 'public:set_payment_attributes' as set_payment_attributes_url %}
+    {% include_djangovirtualpos_set_payment_attributes_js set_payment_attributes_url sale.code url_ok url_nok %}
 {% endblock %}
 
 

@@ -18,13 +18,18 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+
+
 from djshop.apps.public.views import index as index_views
+from djshop.apps.public.views import sale as sale_views
 
 urlpatterns = [
     url(r'^django_admin/', admin.site.urls),
     url(r'^store/', include('djshop.apps.store.urls', namespace="store")),
     url(r'^offers/', include('djshop.apps.offers.urls', namespace="offers")),
     url(r'^public/', include('djshop.apps.public.urls', namespace="public")),
-    url(r'^$', index_views.index, name="index")
+    url(r'^$', index_views.index, name="index"),
+	url(r'^payment/confirm/(?P<virtualpos_type>[a-z]+)$', sale_views.confirm_sale, name='payment_confirmation_url'),
+	url(r'^sale/confirmation/(?P<virtualpos_type>[a-z]+)$', sale_views.confirm_sale, name='payment_confirmation_deprecated_url'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
