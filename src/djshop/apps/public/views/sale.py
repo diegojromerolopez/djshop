@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+from django.db.models import Q
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from djangovirtualpos import views as djangovirtualpos_views
@@ -35,6 +36,6 @@ def sale_ok(request, sale_code):
 
 # Cancel sale
 def sale_cancel(request, sale_code):
-    sale = Sale.objects.get(code=sale_code, status="canceled")
+    sale = Sale.objects.get(Q(status="canceled")|Q(status="pending"), code=sale_code)
     replacements = {"sale": sale}
     return render(request, "public/sale/cancel.html", replacements)
