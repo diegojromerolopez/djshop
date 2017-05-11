@@ -14,6 +14,6 @@ urlpatterns = [
 
     url(r'^sale/set_payment_attributes/?', sale.set_payment_attributes, name='set_payment_attributes'),
     url(r'^sale/(?P<virtualpos_type>[\d\w_]+)/confirm?$', sale.confirm_sale, name="sale_confirm"),
-    url(r'^sale/(?P<sale_code>[\d\w]+)/ok?$', sale.sale_ok, name="sale_ok"),
-    url(r'^sale/(?P<sale_code>[\d\w]+)/cancel?$', sale.sale_cancel, name="sale_cancel"),
+    url(r'^sale/(?P<sale_code>[\d\w]+)/ok/?$', sale.sale_ok, name="sale_ok"),
+    url(r'^sale/(?P<sale_code>[\d\w]+)/cancel/?$', sale.sale_cancel, name="sale_cancel"),
 ]
