@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^django_admin/', admin.site.urls),
     url(r'^store/', include('djshop.apps.store.urls', namespace="store")),
     url(r'^offers/', include('djshop.apps.offers.urls', namespace="offers")),
+    url(r'^club/', include('djshop.apps.club.urls', namespace="club")),
     url(r'^public/', include('djshop.apps.public.urls', namespace="public")),
     url(r'^$', index_views.index, name="index")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

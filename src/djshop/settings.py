@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djshop.apps.base',
+    'djshop.apps.club',
     'djshop.apps.offers',
     'djshop.apps.sale',
     'djshop.apps.store',

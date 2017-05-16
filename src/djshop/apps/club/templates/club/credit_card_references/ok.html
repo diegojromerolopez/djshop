@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+
+{% block page_title %}
+    Admin of DJShop :: Subscription of {{member.full_name}} OK
+{% endblock %}
+
+
+{% block content %}
+    <h1>Subscription of {{member.full_name}} OK</h1>
+    <p>Code: {{reference.code}}</p>
+    <p>Reference: {{reference.reference_number}}</p>
+    <p>Expiration date: {{reference.expiration_date}}</p>
+{% endblock content %}

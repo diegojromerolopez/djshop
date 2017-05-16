@@ -7,8 +7,8 @@
 	<!-- VPOS constants -->
 	<script type="text/javascript">
 		var vpos_constants = {};
-		vpos_constants["SET_PAYMENT_ATTRIBUTES_URL"] = "{% url 'public:set_payment_attributes' %}";
-		vpos_constants["PAYMENT_CODE"] = "{{sale.code}}";
+		vpos_constants["SET_PAYMENT_ATTRIBUTES_URL"] = "{% url 'public:set_credit_card_reference_attributes' %}";
+		vpos_constants["PAYMENT_CODE"] = "{{credit_card_reference.code}}";
 		vpos_constants["URL_OK"] = "{{url_ok}}";
 		vpos_constants["URL_NOK"] = "{{url_nok}}";
 	</script>

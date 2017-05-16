@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+
+{% block page_title %}
+    Admin of DJShop
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Members</h1>
+        </div>
+    </div>
+    <a href="{% url 'club:new_member' %}"><span class="fa fa-plus"></span></a>
+    {% for member in members %}
+        <div class="row">
+            <div class="col-md-12">
+                {{member.first_name}} {{member.last_name}}
+                <a href="{% url 'club:edit_member' member.id %}"><span class="fa fa-pencil"></span></a>
+                <a href="{% url 'club:delete_member' member.id %}"><span class="fa fa-trash"></span></a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

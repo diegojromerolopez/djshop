@@ -1,0 +1,16 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+
+{% block page_title %}
+    Admin of DJShop :: Delete {{member.full_name}}
+{% endblock %}
+
+{% block js %}
+    {{block.super}}
+    {{form.media.js}}
+{% endblock js %}
+
+{% block content %}
+    <h1>Delete member {{member.full_name}}</h1>
+    {% include "base/forms/form.html" %}
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+
+{% block page_title %}
+    Admin of DJShop :: {{member.first_name}}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <h1>{{member.first_name}}</h1>
+        </div>
+    </div>
+    <a href="{% url 'club:edit_member' member.id %}"><span class="fa fa-pencil"></span></a>
+    <a href="{% url 'club:delete_member' member.id %}"><span class="fa fa-trash"></span></a>
+    <div>
+        <a href="{% url 'club:subscribe' member.id %}"><span class="fa fa-thumb-up"></span></a>
+    </div>
+{% endblock content %}
