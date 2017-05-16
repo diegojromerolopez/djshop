@@ -58,6 +58,9 @@ def add_to_cart(request):
     else:
         amount = request.POST.get("grams")
 
+    if amount == "" or amount <= 0:
+        return HttpResponseRedirect(reverse("index"))
+
     if "shopping_cart" not in request.session:
         request.session["shopping_cart"] = {"total_price": 0, "final_price": 0, "group_offer_id": None, "products": {}}
 
