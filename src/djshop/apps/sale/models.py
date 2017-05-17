@@ -7,12 +7,12 @@ import random
 
 
 class Sale(models.Model):
-    STATUS = (
+    STATUS_CHOICES = (
         ("pending", "Pending"),
         ("canceled", "Canceled"),
         ("paid", "Paid")
     )
-    status = models.CharField(verbose_name=u"Sale status", max_length=16, choices=STATUS, default="pending")
+    status = models.CharField(verbose_name=u"Sale status", max_length=16, choices=STATUS_CHOICES, default="pending")
 
     first_name = models.CharField(verbose_name=u"First name", max_length=128)
     last_name = models.CharField(verbose_name=u"Last name", max_length=128)
@@ -81,6 +81,11 @@ class Sale(models.Model):
     @property
     def description(self):
         return u"Sale {0} made by {1} {2}".format(self.code, self.first_name, self.last_name)
+
+    # Return the price of this sale
+    @property
+    def amount(self):
+        return self.final_price
 
     # Online confirm
     def online_confirm(self):

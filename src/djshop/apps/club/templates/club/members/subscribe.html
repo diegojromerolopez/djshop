@@ -1,14 +1,16 @@
 {% extends "base/base.html" %}
 {% load staticfiles %}
+{% load djangovirtualpos_js %}
 
 {% block page_title %}
     Admin of DJShop :: Subscribe {{member.full_name}}
 {% endblock %}
 
 {% block js %}
-    {{block.super}}
-    {{form.media.js}}
-{% endblock js %}
+	{{block.super}}
+    {% url 'club:set_subscription_attributes' member.id as set_subscription_attributes_url %}
+    {% include_djangovirtualpos_set_payment_attributes_js set_subscription_attributes_url reference.code url_ok url_nok %}
+{% endblock %}
 
 {% block content %}
     <h1>Subscribe member {{member.full_name}}</h1>
@@ -18,7 +20,7 @@
             {% for virtual_point_of_sale in virtual_point_of_sales %}
                 <form>
                     <button class="pay_button" data-id="{{virtual_point_of_sale.id}}">
-                        {{virtual_point_of_sale.name}}
+                        Get reference number for {{virtual_point_of_sale.name}}
                     </button>
                 </form>
             {% endfor %}

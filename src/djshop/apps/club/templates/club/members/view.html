@@ -11,9 +11,9 @@
             <h1>{{member.first_name}}</h1>
         </div>
     </div>
-    <a href="{% url 'club:edit_member' member.id %}"><span class="fa fa-pencil"></span></a>
-    <a href="{% url 'club:delete_member' member.id %}"><span class="fa fa-trash"></span></a>
     <div>
-        <a href="{% url 'club:subscribe' member.id %}"><span class="fa fa-thumb-up"></span></a>
+        <a href="{% url 'club:edit_member' member.id %}" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
+        <a href="{% url 'club:subscribe' member.id %}" class="btn btn-primary"><span class="fa fa-check"></span></a>
+        <a href="{% url 'club:delete_member' member.id %}" class="btn btn-danger"><span class="fa fa-trash"></span></a>
     </div>
 {% endblock content %}
