@@ -15,7 +15,10 @@ def set_payment_attributes(request):
     sale_model = Sale
     sale_ok_url = "public:sale_ok"
     sale_nok_url = "public:sale_cancel"
-    return djangovirtualpos_views.set_payment_attributes(request, sale_model, sale_ok_url, sale_nok_url)
+    reference_number = False
+    if request.method == "POST" and request.POST.get("reference_number"):
+        reference_number = request.POST.get("reference_number")
+    return djangovirtualpos_views.set_payment_attributes(request, sale_model, sale_ok_url, sale_nok_url, reference_number)
 
 
 # Confirm sale

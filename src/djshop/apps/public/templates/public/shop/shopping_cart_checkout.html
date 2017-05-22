@@ -73,7 +73,9 @@
             {% with member_current_reference=member.current_credit_card_reference %}
                 {% if member_current_reference.virtual_pos %}
                     <form>
-                        <button class="pay_button" data-id="{{member_current_reference.virtual_pos.id}}">
+                        <button class="pay_button"
+                                data-id="{{member_current_reference.virtual_pos.id}}"
+                                data-reference_number="{{member_current_reference.reference_number}}">
                             {{member.full_name}}'s reference payment {{member_current_reference.virtual_pos.name}}
                         </button>
                     </form>

@@ -15,7 +15,7 @@ def set_attributes(request, member_id):
     sale_model = CreditCardReference
     sale_ok_url = "club:subscription_ok"
     sale_nok_url = "club:subscription_cancel"
-    return djangovirtualpos_views.set_payment_attributes(request, sale_model, sale_ok_url, sale_nok_url, request_reference=True)
+    return djangovirtualpos_views.set_payment_attributes(request, sale_model, sale_ok_url, sale_nok_url, reference_number="request")
 
 
 # Confirm sale
