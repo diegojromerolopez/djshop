@@ -11,4 +11,9 @@
     <p>Code: {{reference.code}}</p>
     <p>Reference: {{reference.reference_number}}</p>
     <p>Expiration date: {{reference.expiration_date}}</p>
+    <p>
+        <a href="{% url 'club:view_member' member.id %}" title="Return to subscriptor profile" class="btn btn-primary">
+            Return to subscriptor profile
+        </a>
+    </p>
 {% endblock content %}

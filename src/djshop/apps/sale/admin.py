@@ -1,3 +1,5 @@
 from django.contrib import admin
+from djshop.apps.sale.models import Sale, SaleDetail
 
-# Register your models here.
+admin.site.register(Sale)
+admin.site.register(SaleDetail)

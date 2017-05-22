@@ -30,12 +30,12 @@ def confirm(request, virtualpos_type):
 # Sale completed successfully
 def ok(request, sale_code):
     reference = CreditCardReference.objects.get(code=sale_code)
-    replacements = {"reference": reference}
+    replacements = {"reference": reference, "member": reference.member}
     return render(request, "club/credit_card_references/subscription/ok.html", replacements)
 
 
 # Cancel sale
 def cancel(request, sale_code):
     reference = CreditCardReference.objects.get(code=sale_code)
-    replacements = {"reference": reference}
+    replacements = {"reference": reference, "member": reference.member}
     return render(request, "club/credit_card_references/subscription/cancel.html", replacements)

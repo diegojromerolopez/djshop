@@ -7,13 +7,23 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <h1>{{member.first_name}}</h1>
+        </div>
+        <div class="col-md-12">
+            <h2>Reference number</h2>
+            {% with current_reference=member.get_current_credit_card_reference %}
+                {% if current_reference %}
+                    <p># {{current_reference.reference_number}}, exp. date {{current_reference.expiration_date}}</p>
+                {% else %}
+                    No reference number or it is expired.
+                    <a href="{% url 'club:subscribe' member.id %}" class="btn btn-primary"><span class="fa fa-check"></span> Request a new reference #</a>
+                {% endif %}
+            {% endwith %}
         </div>
     </div>
     <div>
         <a href="{% url 'club:edit_member' member.id %}" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
-        <a href="{% url 'club:subscribe' member.id %}" class="btn btn-primary"><span class="fa fa-check"></span></a>
         <a href="{% url 'club:delete_member' member.id %}" class="btn btn-danger"><span class="fa fa-trash"></span></a>
     </div>
 {% endblock content %}

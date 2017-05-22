@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^(?P<member_id>\d+)/set_subscription_attributes/?$', credit_card_reference_views.set_attributes, name="set_subscription_attributes"),
 
     url(r'^(?P<member_id>\d+)/(?P<reference_id>\d+)/confirm?$', credit_card_reference_views.confirm, name="confirm_subscription"),
-    url(r'^(?P<sale_code>\d+)/ok?$', credit_card_reference_views.ok, name="subscription_ok"),
-    url(r'^(?P<sale_code>\d+)/cancel?$', credit_card_reference_views.cancel, name="subscription_cancel")
+    url(r'^(?P<sale_code>\d+)/ok/?$', credit_card_reference_views.ok, name="subscription_ok"),
+    url(r'^(?P<sale_code>\d+)/cancel/?$', credit_card_reference_views.cancel, name="subscription_cancel")
 
 ]
