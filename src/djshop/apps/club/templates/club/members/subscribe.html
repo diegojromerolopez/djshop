@@ -14,15 +14,19 @@
 
 {% block content %}
     <h1>Subscribe member {{member.full_name}}</h1>
-
+    <p>
+        Subscription is only available por REDSYS Virtual Points of Sale.
+    </p>
     {% if virtual_point_of_sales|length > 0 %}
         <div>
             {% for virtual_point_of_sale in virtual_point_of_sales %}
-                <form>
-                    <button class="pay_button" data-id="{{virtual_point_of_sale.id}}">
-                        Get reference number for {{virtual_point_of_sale.name}}
-                    </button>
-                </form>
+                {% if virtual_point_of_sale.type == "redsys" %}
+                    <form>
+                        <button class="pay_button" data-id="{{virtual_point_of_sale.id}}">
+                            Get reference number for {{virtual_point_of_sale.name}}
+                        </button>
+                    </form>
+                {% endif %}
             {% endfor %}
         </div>
     {% else %}
