@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-12">
             <h2>Reference number</h2>
-            {% with current_reference=member.get_current_credit_card_reference %}
+            {% with current_reference=member.current_credit_card_reference %}
                 {% if current_reference %}
                     <p># <strong>{{current_reference.reference_number}}</strong>, exp. date <strong>{{current_reference.expiration_date}}</strong></p>
                 {% else %}

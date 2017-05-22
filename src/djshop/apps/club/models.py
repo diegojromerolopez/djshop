@@ -24,8 +24,25 @@ class Member(models.Model):
     def __unicode__(self):
         return self.full_name
 
+    @staticmethod
+    def get_subscribed_members():
+        now = timezone.now()
+        this_year = now.year
+        this_month = now.month
+        return Member.objects.\
+            filter(
+                Q(credit_card_references__expiration_year__gt=this_year) |
+                (
+                    Q(credit_card_references__expiration_year=this_year) &
+                    Q(credit_card_references__expiration_month__lt=this_month)
+                ),
+            credit_card_references__status="paid", credit_card_references__reference_number__isnull=False
+        ).exclude(
+            credit_card_references__reference_number=""
+        ).order_by("-id")
+
     @property
-    def get_current_credit_card_reference(self):
+    def current_credit_card_reference(self):
         try:
             now = timezone.now()
             this_year = now.year
@@ -55,6 +72,7 @@ class CreditCardReference(models.Model):
     status = models.CharField(verbose_name=u"Sale status", max_length=16, choices=STATUS_CHOICES, default="pending")
     expiration_month = models.PositiveIntegerField(verbose_name=u"Credit Card Reference expiration year", blank=True, default=None, null=True)
     expiration_year = models.PositiveIntegerField(verbose_name=u"Credit Card Reference expiration month", blank=True, default=None, null=True)
+    virtual_pos = models.ForeignKey("djangovirtualpos.VirtualPointOfSale", verbose_name=u"Credit Card Reference virtual point of sale", blank=True, default=None, null=True)
 
     @property
     def description(self):
@@ -76,12 +94,14 @@ class CreditCardReference(models.Model):
     def amount(self):
         return 0
 
-    def online_confirm(self, virtual_pos=None):
-        if type(virtual_pos) == VPOSRedsys:
-            self.reference_number = virtual_pos.ds_merchantparameters.get("Ds_Merchant_Identifier")
-            expiration_date = virtual_pos.ds_merchantparameters.get("Ds_ExpiryDate")
-            self.expiration_month = int(expiration_date[2:])
-            self.expiration_year = int("20{0}".format(expiration_date[:2]))
+    def online_confirm(self):
+        if hasattr(self, "virtual_pos"):
+            virtual_pos = self.virtual_pos
+            if hasattr(virtual_pos, "delegated") and type(virtual_pos.delegated) == VPOSRedsys:
+                self.reference_number = virtual_pos.delegated.ds_merchantparameters.get("Ds_Merchant_Identifier")
+                expiration_date = virtual_pos.delegated.ds_merchantparameters.get("Ds_ExpiryDate")
+                self.expiration_month = int(expiration_date[2:])
+                self.expiration_year = int("20{0}".format(expiration_date[:2]))
         self.status = "paid"
         self.save()
 

@@ -67,6 +67,23 @@
         {{sale.final_price}} €
     </div>
 
+    {% if subscribed_members|length > 0%}
+        <h2>Club member payments</h2>
+        {% for member in subscribed_members %}
+            {% with member_current_reference=member.current_credit_card_reference %}
+                {% if member_current_reference.virtual_pos %}
+                    <form>
+                        <button class="pay_button" data-id="{{member_current_reference.virtual_pos.id}}">
+                            {{member.full_name}}'s reference payment {{member_current_reference.virtual_pos.name}}
+                        </button>
+                    </form>
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    {% endif %}
+
+
+    <h2>Standard payment</h2>
     {% if virtual_point_of_sales|length > 0 %}
         <div>
             {% for virtual_point_of_sale in virtual_point_of_sales %}

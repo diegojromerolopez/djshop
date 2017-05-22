@@ -52,7 +52,7 @@ def subscribe(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     reference = CreditCardReference.new(member)
 
-    virtual_point_of_sales = VirtualPointOfSale.objects.all()
+    virtual_point_of_sales = VirtualPointOfSale.objects.filter(is_erased=False)
     replacements = {
         "member": member,
         "reference": reference,
