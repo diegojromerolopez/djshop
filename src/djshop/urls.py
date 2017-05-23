@@ -31,9 +31,9 @@ urlpatterns = [
     url(r'^club/', include('djshop.apps.club.urls', namespace="club")),
     url(r'^public/', include('djshop.apps.public.urls', namespace="public")),
     url(r'^$', index_views.index, name="index"),
-	url(r'^payment/confirm/(?P<virtualpos_type>[a-z]+)$', sale_views.confirm_sale, name='payment_confirmation_url'),
-	url(r'^sale/confirmation/(?P<virtualpos_type>[a-z]+)$', sale_views.confirm_sale, name='payment_confirmation_deprecated_url'),
-
-	url(r'^confirm_subscription/(?P<virtualpos_type>[a-z]+)$', credit_card_references_views.confirm, name='credit_card_references_views_url'),
+    # Payment URL
+	url(r'^sale/confirmation/(?P<virtualpos_type>[a-z]+)$', sale_views.confirm_sale, name='payment_confirmation_url'),
+	# Subscription confirm URL
+	url(r'^subscription/confirmation/(?P<virtualpos_type>[a-z]+)$', credit_card_references_views.confirm, name='credit_card_references_views_url'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

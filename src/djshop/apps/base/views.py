@@ -35,13 +35,15 @@ def edit(request, instance, form_class, template_path, ok_url):
 
 
 # Delete an object
-def delete(request, instance, template_path="base/forms/delete.html"):
+def delete(request, instance, template_path="base/forms/delete.html", next_url=None):
     if request.method == "POST":
         form = DeleteForm(request.POST)
 
         if form.is_valid() and form.cleaned_data.get("confirmed"):
             instance.delete()
-            return HttpResponseRedirect(reverse("store:view_products"))
+            if next_url is None:
+                return HttpResponseRedirect(reverse("store:view_products"))
+            return HttpResponseRedirect(next_url)
 
     else:
         form = DeleteForm()

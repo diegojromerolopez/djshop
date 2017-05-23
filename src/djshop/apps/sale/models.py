@@ -47,19 +47,28 @@ class Sale(models.Model):
                                       help_text="Price for this sale including discount",
                                       decimal_places=2, max_digits=10)
 
+    member = models.ForeignKey("club.Member", default=None, null=True, blank=True, related_name="sales")
+
     @staticmethod
     def get_random_code(size=16):
         return ''.join(random.choice("0123456789") for _ in range(size))
 
     @staticmethod
-    def factory_from_shopping_cart(shopping_cart, selected_products, first_name, last_name, telephone_number, email):
+    def factory_from_shopping_cart(shopping_cart, selected_products, first_name=None, last_name=None, telephone_number=None, email=None, member=None):
+
+        if member:
+            first_name = member.first_name
+            last_name = member.last_name
+            telephone_number = member.telephone_number
+            email = member.email
+
         # Shopping cart data
         total_price = shopping_cart["total_price"]
         final_price = shopping_cart["final_price"]
         sale = Sale(
             first_name=first_name, last_name=last_name, telephone_number=telephone_number, email=email,
             code=Sale.get_random_code(), creation_datetime=timezone.now(),
-            total_price=total_price, final_price=final_price
+            total_price=total_price, final_price=final_price, member=member
         )
 
         # If there is an offer

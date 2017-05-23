@@ -16,6 +16,10 @@ class Member(models.Model):
 
     first_name = models.CharField(verbose_name=u"First name of the member", max_length=32)
     last_name = models.CharField(verbose_name=u"Last name of the member", max_length=32)
+    telephone_number = models.CharField(verbose_name=u"Last name of the member", max_length=32, blank=True, default="")
+    email = models.EmailField(verbose_name=u"Email of the member", blank=True, default="")
+
+    autocheckout_secret_code_checksum = models.CharField(verbose_name=u"Checksum used for autocheckout", max_length=512, blank=True, default="")
 
     @property
     def full_name(self):
@@ -23,23 +27,6 @@ class Member(models.Model):
 
     def __unicode__(self):
         return self.full_name
-
-    @staticmethod
-    def get_subscribed_members():
-        now = timezone.now()
-        this_year = now.year
-        this_month = now.month
-        return Member.objects.\
-            filter(
-                Q(credit_card_references__expiration_year__gt=this_year) |
-                (
-                    Q(credit_card_references__expiration_year=this_year) &
-                    Q(credit_card_references__expiration_month__lt=this_month)
-                ),
-            credit_card_references__status="paid", credit_card_references__reference_number__isnull=False
-        ).exclude(
-            credit_card_references__reference_number=""
-        ).order_by("-id")
 
     @property
     def current_credit_card_reference(self):
@@ -104,6 +91,23 @@ class CreditCardReference(models.Model):
                 self.expiration_year = int("20{0}".format(expiration_date[:2]))
         self.status = "paid"
         self.save()
+
+    @staticmethod
+    def get_current_credit_card_references():
+        now = timezone.now()
+        this_year = now.year
+        this_month = now.month
+        return CreditCardReference.objects.\
+            filter(
+                Q(expiration_year__gt=this_year) |
+                (
+                    Q(expiration_year=this_year) &
+                    Q(expiration_month__lt=this_month)
+                ),
+            status="paid", reference_number__isnull=False
+        ).exclude(
+            reference_number=""
+        ).order_by("-id")
 
     @staticmethod
     def new(member):

@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from djangovirtualpos.models import VirtualPointOfSale
 
-from djshop.apps.club.models import Member
+from djshop.apps.club.models import Member, CreditCardReference
 from djshop.apps.offers.models import BundleOffer, GroupOffer
 from djshop.apps.public.forms import ShoppingCartCheckoutForm
 from djshop.apps.public.shopping_cart import SelectedProduct
@@ -24,11 +24,18 @@ def view_shopping_cart(request):
         if form.is_valid():
             shopping_cart = request.session["shopping_cart"]
             selected_products = SelectedProduct.get_selected_products(request)
-            first_name = form.cleaned_data.get("first_name")
-            last_name = form.cleaned_data.get("last_name")
-            telephone_number = form.cleaned_data.get("telephone_number")
-            email = form.cleaned_data.get("email")
-            sale = Sale.factory_from_shopping_cart(shopping_cart, selected_products, first_name, last_name, telephone_number, email)
+            if form.cleaned_data.get("member"):
+                member = form.cleaned_data.get("member")
+                sale = Sale.factory_from_shopping_cart(shopping_cart, selected_products, member=member)
+            else:
+                first_name = form.cleaned_data.get("first_name")
+                last_name = form.cleaned_data.get("last_name")
+                telephone_number = form.cleaned_data.get("telephone_number")
+                email = form.cleaned_data.get("email")
+                sale = Sale.factory_from_shopping_cart(shopping_cart, selected_products,
+                                                       first_name=first_name, last_name=last_name,
+                                                       telephone_number=telephone_number, email=email)
+
             del request.session["shopping_cart"]
             return HttpResponseRedirect(reverse("public:shopping_cart_checkout", args=(sale.code,)))
     else:
@@ -129,8 +136,10 @@ def shopping_cart_checkout(request, sale_code):
     sale = Sale.objects.get(code=sale_code)
     virtual_point_of_sales = VirtualPointOfSale.objects.filter(is_erased=False)
     replacements = {
+        "user_is_admin": request.user.is_superuser,
+        "member": sale.member,
         "sale": sale,
-        "subscribed_members": Member.get_subscribed_members(),
+        "current_references": CreditCardReference.get_current_credit_card_references(),
         "virtual_point_of_sales": virtual_point_of_sales,
         "url_ok": request.build_absolute_uri(reverse("public:sale_ok", kwargs={"sale_code": sale.code})),
         "url_nok": request.build_absolute_uri(reverse("public:sale_cancel", kwargs={"sale_code": sale.code})),

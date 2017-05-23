@@ -67,21 +67,41 @@
         {{sale.final_price}} €
     </div>
 
-    {% if subscribed_members|length > 0%}
-        <h2>Club member payments</h2>
-        {% for member in subscribed_members %}
-            {% with member_current_reference=member.current_credit_card_reference %}
-                {% if member_current_reference.virtual_pos %}
-                    <form>
-                        <button class="pay_button"
-                                data-id="{{member_current_reference.virtual_pos.id}}"
-                                data-reference_number="{{member_current_reference.reference_number}}">
-                            {{member.full_name}}'s reference payment {{member_current_reference.virtual_pos.name}}
-                        </button>
-                    </form>
-                {% endif %}
-            {% endwith %}
-        {% endfor %}
+    {% if member %}
+        {% with reference=member.current_credit_card_reference %}
+            {% if reference.virtual_pos %}
+                <form>
+                    <button class="pay_button"
+                            data-id="{{reference.virtual_pos.id}}"
+                            data-reference_number="{{reference.reference_number}}">
+                        <span class="fa fa-shopping-cart"></span>
+                        <strong>{{member.full_name}}</strong>'s reference payment {{reference.virtual_pos.name}}
+                    </button>
+                </form>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+
+    {% if user_is_admin %}
+        {% if current_references|length > 0 %}
+            <h2>Club member payments</h2>
+            {% for reference in current_references %}
+                {% with member=reference.member %}
+                    {% if reference.virtual_pos %}
+                        <form>
+                            <button class="pay_button"
+                                    data-id="{{reference.virtual_pos.id}}"
+                                    data-reference_number="{{reference.reference_number}}">
+                                <span class="fa fa-shopping-cart"></span>
+                                <strong>{{member.full_name}}</strong>'s reference payment {{reference.virtual_pos.name}}
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        {% endif %}
+    {% else %}
+
     {% endif %}
 
 

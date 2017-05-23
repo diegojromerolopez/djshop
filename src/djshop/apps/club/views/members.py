@@ -43,7 +43,7 @@ def view(request, member_id):
 @login_required
 def delete(request, member_id):
     member = get_object_or_404(Member, id=member_id)
-    return base_views.delete(request, instance=member)
+    return base_views.delete(request, instance=member, next_url=reverse("club:index", args=(member.id,)))
 
 
 # Subscribe
@@ -61,3 +61,11 @@ def subscribe(request, member_id):
         "url_nok": request.build_absolute_uri(reverse("club:subscription_cancel", kwargs={"sale_code": reference.code})),
     }
     return render(request, "club/members/subscribe.html", replacements)
+
+
+# Delete subscription
+@login_required
+def delete_subscription(request, member_id, reference_id):
+    member = get_object_or_404(Member, id=member_id)
+    reference = get_object_or_404(CreditCardReference, id=reference_id, member=member)
+    return base_views.delete(request, instance=reference, next_url=reverse("club:view_member", args=(member.id,)))
