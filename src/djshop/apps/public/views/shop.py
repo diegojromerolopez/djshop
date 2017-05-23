@@ -10,7 +10,7 @@ from djangovirtualpos.models import VirtualPointOfSale
 
 from djshop.apps.club.models import Member, CreditCardReference
 from djshop.apps.offers.models import BundleOffer, GroupOffer
-from djshop.apps.public.forms import ShoppingCartCheckoutForm
+from djshop.apps.public.forms import AdminShoppingCartCheckoutForm, AnonymousShoppingCartCheckoutForm
 from djshop.apps.public.shopping_cart import SelectedProduct
 from djshop.apps.sale.models import Sale
 from djshop.apps.store.models import Product
@@ -18,8 +18,14 @@ from djshop.apps.store.models import Product
 
 # View shopping cart
 def view_shopping_cart(request):
+
+    if request.user.is_superuser:
+        form_class = AdminShoppingCartCheckoutForm
+    else:
+        form_class = AnonymousShoppingCartCheckoutForm
+
     if request.method == "POST":
-        form = ShoppingCartCheckoutForm(request.POST)
+        form = form_class(request.POST)
 
         if form.is_valid():
             shopping_cart = request.session["shopping_cart"]
@@ -39,7 +45,7 @@ def view_shopping_cart(request):
             del request.session["shopping_cart"]
             return HttpResponseRedirect(reverse("public:shopping_cart_checkout", args=(sale.code,)))
     else:
-        form = ShoppingCartCheckoutForm()
+        form = form_class()
 
     replacements = {"form": form}
     if "shopping_cart" in request.session and len(request.session["shopping_cart"]["products"].keys()) > 0:

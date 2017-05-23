@@ -65,7 +65,7 @@ python src/manage.py createsuperuser
 
 Use this superuser to manage the shop.
 
-# VPOS integration summary
+# Standard VPOS payment integration summary
 
 ## Requirements
 
@@ -134,6 +134,20 @@ def confirm_sale(request, virtualpos_type):
     return djangovirtualpos_views.confirm_payment(request, virtualpos_type, Sale)
 ```
 
+# VPOS payment by reference integration summary
+
+VPOS payment by reference uses an unique reference to make payments without having to
+ ask the credic card number
+
+If your REDSYS VPOS allow this (currently only supported by **REDSYS with POST confirmation**),
+you only have to
+
+Checkout the club application form more information. The process is defined as follows:
+
+- Administrators create a new member.
+- They make a 0€ payment operation (need his/her credit number, CVV and expiration date).
+- This operation returns a reference and automatically it is stored in that member.
+- From now on, an admin can make direct payments using his/her reference.
 
 # Legal notice
 

@@ -28,7 +28,8 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 
-class ShoppingCartCheckoutForm(forms.Form):
+# Checkout form for anonymous people
+class AnonymousShoppingCartCheckoutForm(forms.Form):
     secret_code = forms.CharField(label="Secret code", required=False)
     first_name = forms.CharField(label=u"First name", required=False)
     last_name = forms.CharField(label=u"Last name", required=False)
@@ -36,7 +37,7 @@ class ShoppingCartCheckoutForm(forms.Form):
     email = forms.EmailField(label=u"Email", required=False)
 
     def clean(self):
-        cleaned_data = super(ShoppingCartCheckoutForm, self).clean()
+        cleaned_data = super(AnonymousShoppingCartCheckoutForm, self).clean()
         if not cleaned_data.get("secret_code") and\
                 (not cleaned_data.get("first_name") or not cleaned_data.get("last_name") or
                          not cleaned_data.get("telephone_number") or not cleaned_data.get("email")):
@@ -46,7 +47,6 @@ class ShoppingCartCheckoutForm(forms.Form):
             secret_code = cleaned_data.get("secret_code")
             try:
                 secret_code_checksum = hashlib.sha256(secret_code).hexdigest()
-                print secret_code_checksum
                 member = Member.objects.get(autocheckout_secret_code_checksum=secret_code_checksum)
                 if member.current_credit_card_reference is None:
                     raise CreditCardReference.DoesNotExist
@@ -58,3 +58,31 @@ class ShoppingCartCheckoutForm(forms.Form):
 
         return cleaned_data
 
+
+# Checkout form for admins
+class AdminShoppingCartCheckoutForm(forms.Form):
+    member = forms.ChoiceField(label=u"Member", choices=[], required=False)
+    first_name = forms.CharField(label=u"First name", required=False)
+    last_name = forms.CharField(label=u"Last name", required=False)
+    telephone_number = forms.CharField(label=u"Telephone number", required=False)
+    email = forms.EmailField(label=u"Email", required=False)
+
+
+    def __init__(self, *args, **kwargs):
+        super(AdminShoppingCartCheckoutForm, self).__init__(*args, **kwargs)
+        self.fields["member"].choices = [("", "Non-subscribed Customer")]+[
+            (reference.member_id, reference.member.full_name)
+            for reference in CreditCardReference.get_current_credit_card_references()
+        ]
+
+    def clean(self):
+        cleaned_data = super(AdminShoppingCartCheckoutForm, self).clean()
+        if not cleaned_data.get("member") and \
+                (not cleaned_data.get("first_name") or not cleaned_data.get("last_name") or
+                     not cleaned_data.get("telephone_number") or not cleaned_data.get("email")):
+            raise ValidationError(u"Select a member or a non-subscribed customer")
+
+        if cleaned_data.get("member"):
+            cleaned_data["member"] = Member.objects.get(id=cleaned_data["member"])
+
+        return cleaned_data
